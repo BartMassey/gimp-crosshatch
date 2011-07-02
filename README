@@ -1,0 +1,32 @@
+This filter started with a need for an etching of Lewis
+Carroll for a talk I gave at the Open Source Bridge
+Conference 2011. It turns out I couldn't easily find one, so
+I looked for a GIMP plugin to process a photo into a
+synthetic etching. After some digging around, the most
+promising thing I could find was a Perl plug-in posted by
+Sam Jones in 2001 to an email list.
+
+I've taken Jones's plugin as an inspiration, and written a
+Scheme Script-Fu plugin with similar operation.  My plugin
+produces marginal-quality synthetic etchings.
+
+The code currently leaves several layers lying around when
+it is done; you can adjust each layer as you like and then
+merge them manually if desired. The layers are a
+"penciled-in" layer, with NW and NE crosshatch layers above
+that.
+
+Planned future enhancements include more control, some
+additional modes, and optional automatic layer merging.
+
+I have placed my code under GPLv2 to clarify GIMP license
+compatibility. Please see the file COPYING in this
+distribution for license details. I do not believe that my
+current code is a derivative work of Sam Jones's code per US
+copyright law. I have attempted to contact Sam Jones without
+success. Hopefully, he will appear at some point and give
+the project his blessing.
+
+    Bart Massey
+    bart.massey@gmail.com
+    2011-07-01
