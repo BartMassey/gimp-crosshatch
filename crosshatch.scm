@@ -59,7 +59,7 @@
     (gimp-edit-stroke-vectors o-layer
 			      (car (gimp-image-get-active-vectors image)))
     (gimp-layer-set-opacity o-layer 50)
-    (if merge-layers
+    (if (eq? merge-layers TRUE)
 	(begin
 	  (gimp-image-merge-down image o-layer CLIP-TO-IMAGE)
 	  (gimp-image-merge-down image e-layer CLIP-TO-IMAGE)
