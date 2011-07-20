@@ -24,18 +24,19 @@
     layer))
 
 (define (script-fu-crosshatch-make-etch
-	 image drawable name noise angle darkness)
+	 image drawable name noise etch-length angle darkness)
   (let ((etch (script-fu-crosshatch-make-layer
 	       image drawable name NORMAL-MODE)))
     (plug-in-noisify RUN-NONINTERACTIVE image etch 0 noise noise noise 0.0)
-    (plug-in-mblur RUN-NONINTERACTIVE image etch 0 5 angle 0 0)
+    (plug-in-mblur RUN-NONINTERACTIVE image etch 0 etch-length angle 0 0)
     (gimp-layer-set-mode etch GRAIN-MERGE-MODE)
     (gimp-levels etch HISTOGRAM-VALUE (+ darkness 192) 255 1.0 0 255)
     (gimp-layer-set-opacity etch 50)
     etch))
   
-(define (script-fu-crosshatch image drawable noise darkness
-			      trace-threshold trace-brush)
+(define (script-fu-crosshatch
+	 image drawable noise etch-length darkness
+	 trace-threshold trace-brush)
   (gimp-image-undo-group-start image)
 ; Grab traceable area for later use
   (gimp-by-color-select drawable '(0 0 0) trace-threshold CHANNEL-OP-REPLACE
@@ -53,9 +54,9 @@
     (gimp-layer-set-opacity outline-layer 50))
 ; The crosshatching is two layers 90 degrees apart
   (script-fu-crosshatch-make-etch
-   image drawable "Etch" noise 135 darkness)
+   image drawable "Etch" noise etch-length 135 darkness)
   (script-fu-crosshatch-make-etch
-   image drawable "Cross Etch" noise 45 darkness)
+   image drawable "Cross Etch" noise etch-length 45 darkness)
 ; Clean up
   (gimp-image-undo-group-end image)
   (gimp-displays-flush))
@@ -70,7 +71,8 @@
  "RGB* GRAY*"
  SF-IMAGE "Image" -1
  SF-DRAWABLE "Drawable" -1
- SF-ADJUSTMENT "Sketch density" `(0.25 0.0 1.0 0.05 0.25 2 ,SF-SLIDER)
+ SF-ADJUSTMENT "Etch density" `(0.25 0.0 1.0 0.05 0.25 2 ,SF-SLIDER)
+ SF-ADJUSTMENT "Etch length" `(10.0 0.0 100.0 1.0 5.0 1 ,SF-SLIDER)
  SF-ADJUSTMENT "Sketch darkness" `(31 0 63 1 8 0 ,SF-SLIDER)
  SF-ADJUSTMENT "Trace threshold" `(40 0 255 1 16 0 ,SF-SLIDER)
  SF-BRUSH  "Trace brush" `("Diagonal Star (11)" 1.0 100 ,NORMAL))
