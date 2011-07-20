@@ -10,14 +10,17 @@ I've taken Jones's plugin as an inspiration, and written a
 Scheme Script-Fu plugin with similar operation.  My plugin
 produces marginal-quality synthetic etchings.
 
-The code currently leaves several layers lying around when
-it is done; you can adjust each layer as you like and then
-merge them manually if desired. The layers are a
+If you like, the code will leave the layers it constructed
+lying around when it is done; you can adjust each layer as
+desired and then merge them manually. The layers are a
 "penciled-in" layer, with NW and NE crosshatch layers above
 that.
 
-Planned future enhancements include more control, some
-additional modes, and optional automatic layer merging.
+Planned future enhancements include some more control over
+the etching. It would be nice to have preview mode, but it
+looks like that would require rewriting this code in
+something other than Scheme, and I'm not really up for
+another rewrite.
 
 I have placed my code under GPLv2 to clarify GIMP license
 compatibility. Please see the file COPYING in this
@@ -29,4 +32,4 @@ the project his blessing.
 
     Bart Massey
     bart.massey@gmail.com
-    2011-07-01
+    2011-07-20
