@@ -36,27 +36,35 @@
   
 (define (script-fu-crosshatch
 	 image drawable noise etch-length darkness
-	 trace-threshold trace-brush)
+	 trace-threshold trace-brush merge-layers)
   (gimp-image-undo-group-start image)
 ; Grab traceable area for later use
   (gimp-by-color-select drawable '(0 0 0) trace-threshold CHANNEL-OP-REPLACE
 			0 0 0.0 0)
   (plug-in-sel2path RUN-NONINTERACTIVE image drawable)
   (gimp-selection-none image)
+  (let*
 ; Trace penciling
-  (let* ((outline-layer (script-fu-crosshatch-make-layer
-			 image drawable "Traced Outline" MULTIPLY-MODE)))
+      ((o-layer (script-fu-crosshatch-make-layer
+		 image drawable "Traced Outline" MULTIPLY-MODE))
+; The crosshatching is two layers 90 degrees apart
+       (e-layer (script-fu-crosshatch-make-etch
+		 image drawable "Etch" noise etch-length 135 darkness))
+       (ce-layer (script-fu-crosshatch-make-etch
+		  image drawable "Cross Etch" noise etch-length 45 darkness)))
+
     (gimp-context-set-brush (car trace-brush))
     (gimp-context-set-opacity (* 100 (cadr trace-brush)))
     (gimp-context-set-paint-mode (cadddr trace-brush))
-    (gimp-edit-stroke-vectors outline-layer
+    (gimp-edit-stroke-vectors o-layer
 			      (car (gimp-image-get-active-vectors image)))
-    (gimp-layer-set-opacity outline-layer 50))
-; The crosshatching is two layers 90 degrees apart
-  (script-fu-crosshatch-make-etch
-   image drawable "Etch" noise etch-length 135 darkness)
-  (script-fu-crosshatch-make-etch
-   image drawable "Cross Etch" noise etch-length 45 darkness)
+    (gimp-layer-set-opacity o-layer 50)
+    (if merge-layers
+	(begin
+	  (gimp-image-merge-down image o-layer CLIP-TO-IMAGE)
+	  (gimp-image-merge-down image e-layer CLIP-TO-IMAGE)
+	  (gimp-image-merge-down image ce-layer CLIP-TO-IMAGE))))
+  
 ; Clean up
   (gimp-image-undo-group-end image)
   (gimp-displays-flush))
@@ -75,7 +83,8 @@
  SF-ADJUSTMENT "Etch length" `(10.0 0.0 100.0 1.0 5.0 1 ,SF-SLIDER)
  SF-ADJUSTMENT "Sketch darkness" `(31 0 63 1 8 0 ,SF-SLIDER)
  SF-ADJUSTMENT "Trace threshold" `(40 0 255 1 16 0 ,SF-SLIDER)
- SF-BRUSH  "Trace brush" `("Diagonal Star (11)" 1.0 100 ,NORMAL))
+ SF-BRUSH  "Trace brush" `("Diagonal Star (11)" 1.0 100 ,NORMAL)
+ SF-TOGGLE "Merge layers" TRUE)
 
 (script-fu-menu-register
  "script-fu-crosshatch"
