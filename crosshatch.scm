@@ -71,14 +71,14 @@
 
 (script-fu-register
  "script-fu-crosshatch"
- "Crosshatch..."
+ "Cross_hatch..."
  "Makes image appear to have been drawn in and crosshatched"
  "Sam Jones, Bart Massey"
  "Copyright 2001 Sam Jones; Copyright 2011 Bart Massey"
  "April 16, 2001"
  "RGB* GRAY*"
- SF-IMAGE "Image" -1
- SF-DRAWABLE "Drawable" -1
+ SF-IMAGE "Image" 0
+ SF-DRAWABLE "Drawable" 0
  SF-ADJUSTMENT "Etch density" `(0.25 0.0 1.0 0.05 0.25 2 ,SF-SLIDER)
  SF-ADJUSTMENT "Etch length" `(10.0 0.0 100.0 1.0 5.0 1 ,SF-SLIDER)
  SF-ADJUSTMENT "Sketch darkness" `(31 0 63 1 8 0 ,SF-SLIDER)
