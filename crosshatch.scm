@@ -23,20 +23,21 @@
     (gimp-edit-fill layer BG-IMAGE-FILL)
     layer))
 
-(define (script-fu-crosshatch-make-etch
-	 image drawable name noise etch-length angle darkness)
-  (let ((etch (script-fu-crosshatch-make-layer
+(define (script-fu-crosshatch-make-hatch
+	 image drawable name noise hatch-length angle darkness)
+  (let ((hatch (script-fu-crosshatch-make-layer
 	       image drawable name NORMAL-MODE)))
-    (plug-in-noisify RUN-NONINTERACTIVE image etch 0 noise noise noise 0.0)
-    (plug-in-mblur RUN-NONINTERACTIVE image etch 0 etch-length angle 0 0)
-    (gimp-layer-set-mode etch GRAIN-MERGE-MODE)
-    (gimp-levels etch HISTOGRAM-VALUE (+ darkness 192) 255 1.0 0 255)
-    (gimp-layer-set-opacity etch 50)
-    etch))
+    (plug-in-noisify RUN-NONINTERACTIVE image hatch 0 noise noise noise 0.0)
+    (plug-in-mblur RUN-NONINTERACTIVE image hatch 0 hatch-length angle 0 0)
+    (gimp-layer-set-mode hatch GRAIN-MERGE-MODE)
+    (gimp-levels hatch HISTOGRAM-VALUE (+ darkness 192) 255 1.0 0 255)
+    (gimp-layer-set-opacity hatch 50)
+    hatch))
   
 (define (script-fu-crosshatch
-	 image drawable noise etch-length darkness
-	 trace-threshold trace-brush merge-layers)
+	 image drawable noise hatch-length
+	 h-angle ch-angle
+	 darkness trace-threshold trace-brush merge-layers)
   (gimp-image-undo-group-start image)
 ; Grab traceable area for later use
   (gimp-by-color-select drawable '(0 0 0) trace-threshold CHANNEL-OP-REPLACE
@@ -47,11 +48,13 @@
 ; Trace penciling
       ((o-layer (script-fu-crosshatch-make-layer
 		 image drawable "Traced Outline" MULTIPLY-MODE))
-; The crosshatching is two layers 90 degrees apart
-       (e-layer (script-fu-crosshatch-make-etch
-		 image drawable "Etch" noise etch-length 135 darkness))
-       (ce-layer (script-fu-crosshatch-make-etch
-		  image drawable "Cross Etch" noise etch-length 45 darkness)))
+; The crosshatching is two layers normally 90 degrees apart
+       (h-layer (script-fu-crosshatch-make-hatch
+		 image drawable "Hatch"
+		 noise hatch-length (- h-angle 90) darkness))
+       (ch-layer (script-fu-crosshatch-make-hatch
+		 image drawable "Cross-Hatch"
+		 noise hatch-length (- ch-angle 90) darkness)))
 
     (gimp-context-set-brush (car trace-brush))
     (gimp-context-set-opacity (* 100 (cadr trace-brush)))
@@ -62,8 +65,8 @@
     (if (eq? merge-layers TRUE)
 	(begin
 	  (gimp-image-merge-down image o-layer CLIP-TO-IMAGE)
-	  (gimp-image-merge-down image e-layer CLIP-TO-IMAGE)
-	  (gimp-image-merge-down image ce-layer CLIP-TO-IMAGE))))
+	  (gimp-image-merge-down image h-layer CLIP-TO-IMAGE)
+	  (gimp-image-merge-down image ch-layer CLIP-TO-IMAGE))))
   
 ; Clean up
   (gimp-image-undo-group-end image)
@@ -79,8 +82,10 @@
  "RGB* GRAY*"
  SF-IMAGE "Image" 0
  SF-DRAWABLE "Drawable" 0
- SF-ADJUSTMENT "Etch density" `(0.25 0.0 1.0 0.05 0.25 2 ,SF-SLIDER)
- SF-ADJUSTMENT "Etch length" `(10.0 0.0 100.0 1.0 5.0 1 ,SF-SLIDER)
+ SF-ADJUSTMENT "Hatch density" `(0.25 0.0 1.0 0.05 0.25 2 ,SF-SLIDER)
+ SF-ADJUSTMENT "Hatch length" `(10.0 0.0 100.0 1.0 5.0 1 ,SF-SLIDER)
+ SF-ADJUSTMENT "Hatch angle" `(45 0 180 5 45 1 ,SF-SLIDER)
+ SF-ADJUSTMENT "Cross-Hatch angle" `(135 0 180 5 45 1 ,SF-SLIDER)
  SF-ADJUSTMENT "Sketch darkness" `(31 0 63 1 8 0 ,SF-SLIDER)
  SF-ADJUSTMENT "Trace threshold" `(40 0 255 1 16 0 ,SF-SLIDER)
  SF-BRUSH  "Trace brush" `("Diagonal Star (11)" 1.0 100 ,NORMAL)
