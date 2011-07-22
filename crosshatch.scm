@@ -76,9 +76,9 @@
  "script-fu-crosshatch"
  "Cross_hatch..."
  "Makes image appear to have been drawn in and crosshatched"
- "Sam Jones, Bart Massey"
- "Copyright 2001 Sam Jones; Copyright 2011 Bart Massey"
- "April 16, 2001"
+ "Bart Massey"
+ "Copyright 2011 Bart Massey (inspired by material Copyright 2001 Sam Jones)"
+ "July 21, 2011"
  "RGB* GRAY*"
  SF-IMAGE "Image" 0
  SF-DRAWABLE "Drawable" 0
