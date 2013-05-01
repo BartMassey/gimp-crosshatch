@@ -16,6 +16,9 @@ I've taken Jones's plugin as an inspiration, and written a
 GUILE Scheme Script-Fu plugin with similar operation.  My
 plugin produces marginal-quality synthetic etchings.
 
+<blockquote><table><tr><img src="bart-grey.png" alt="before"/></tr>
+<tr><img src="bart-hatched.png" alt="after"/></tr></table></blockquote>
+
 If you like, the code will leave the layers it constructed
 lying around when it is done; you can adjust each layer as
 desired and then merge them manually. The layers are a
@@ -28,7 +31,7 @@ Install this just like any other Gimp Script-Fu plugin. For
 Linux and Mac OS X, this means copying `crosshatch.scm` to
 `~/.gimp-2.6/scripts/` and restarting Gimp. For Windows,
 copy into `C:\Program Files\GIMP-2.0\share\gimp\2.0\scripts`
-or something---I'm not a Windows user, so I don't really
+or something--I'm not a Windows user, so I don't really
 know.
 
 # Future Work
