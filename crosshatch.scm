@@ -88,7 +88,7 @@
  SF-ADJUSTMENT "Cross-Hatch angle" `(135 0 180 5 45 1 ,SF-SLIDER)
  SF-ADJUSTMENT "Sketch darkness" `(31 0 63 1 8 0 ,SF-SLIDER)
  SF-ADJUSTMENT "Trace threshold" `(40 0 255 1 16 0 ,SF-SLIDER)
- SF-BRUSH  "Trace brush" `("Diagonal Star (11)" 1.0 100 ,NORMAL)
+ SF-BRUSH  "Trace brush" `("Diagonal Star (11)" 1.0 100 0)
  SF-TOGGLE "Merge layers" TRUE)
 
 (script-fu-menu-register
